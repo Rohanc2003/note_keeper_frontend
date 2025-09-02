@@ -107,6 +107,9 @@ function Login() {
           <p className="resend-link" onClick={handleRequestOtp}>Resend OTP</p>
         </form>
       )}
+      {/* <div className="login-image">
+      <img src="/pc.jpg" alt="Login visual" />
+    </div> */}
 
       {/* Google login button */}
       <div className="google-login">
@@ -118,6 +121,7 @@ function Login() {
       <p className="login-footer">
         Need an account? <a href="/signup">Create one</a>
       </p>
+      
     </div>
   );
 }

@@ -67,69 +67,76 @@ export default function SignUp() {
   }
 
   return (
-    <div className="signup-container">
-      <h2 className="signup-title">Sign up</h2>
-      <p className="signup-subtitle">Sign up to enjoy the feature of HD</p>
+    <div className="signup-wrapper">
+      {/* Form container */}
+      <div className="signup-container">
+        <h2 className="signup-title">Sign up</h2>
+        <p className="signup-subtitle">Sign up to enjoy the feature of HD</p>
 
-      {/* Step 1 → Request OTP */}
-      {step === 1 && (
-        <form onSubmit={handleRequestOTP} className="signup-form">
-          <input
-            placeholder="Your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <button type="submit" className="btn-primary">Get OTP</button>
-        </form>
-      )}
+        {/* Step 1 → Request OTP */}
+        {step === 1 && (
+          <form onSubmit={handleRequestOTP} className="signup-form">
+            <input
+              placeholder="Your Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn-primary">Get OTP</button>
+          </form>
+        )}
 
-      {/* Step 2 → Verify OTP */}
-      {step === 2 && (
-        <form onSubmit={handleVerifyOTP} className="signup-form">
-          <input value={name} disabled />
-          <input type="email" value={email} disabled />
-          <input
-            type="text"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            required
-          />
-          <button type="submit" className="btn-primary">Sign up</button>
-          <button
-            type="button"
-            onClick={handleResendOTP}
-            className="btn-secondary"
-          >
-            Resend OTP
-          </button>
-        </form>
-      )}
+        {/* Step 2 → Verify OTP */}
+        {step === 2 && (
+          <form onSubmit={handleVerifyOTP} className="signup-form">
+            <input value={name} disabled />
+            <input type="email" value={email} disabled />
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn-primary">Sign up</button>
+            <button
+              type="button"
+              onClick={handleResendOTP}
+              className="btn-secondary"
+            >
+              Resend OTP
+            </button>
+          </form>
+        )}
 
-      {/* Google Signup */}
-      <button
-  type="button"
-  className="btn-google"
-  onClick={() => (window.location.href = "http://localhost:5000/auth/google")}
->
-  Sign up with Google
-</button>
+        {/* Google Signup */}
+        <button
+          type="button"
+          className="btn-google"
+          onClick={() => (window.location.href = "http://localhost:5000/auth/google")}
+        >
+          Sign up with Google
+        </button>
 
+        {message && <p className="msg-success">{message}</p>}
+        {error && <p className="msg-error">{error}</p>}
 
-      {message && <p className="msg-success">{message}</p>}
-      {error && <p className="msg-error">{error}</p>}
+        <p className="signup-footer">
+          Already have an account? <a href="/login">Sign in</a>
+        </p>
+      </div>
 
-      <p className="signup-footer">
-        Already have an account? <a href="/login">Sign in</a>
-      </p>
+      {/* Desktop image (hidden on mobile, shown on PC) */}
+      <div className="signup-image">
+        <img src="/pc.jpg" alt="Signup visual" />
+      </div>
     </div>
   );
 }
