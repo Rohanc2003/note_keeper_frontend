@@ -1,9 +1,13 @@
 .login-container {
   max-width: 380px;
-  margin: 0 auto;
-  padding: 24px;
+  margin: 40px auto;
+  padding: 28px;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   text-align: center;
+  background: #ffffff;
+  border: 1px solid #e5e7eb; /* light border around container */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .login-header {
@@ -20,33 +24,43 @@
   animation: spin 1s linear infinite;
   transform-origin: center;
 }
-@keyframes spin { from {transform: rotate(0);} to {transform: rotate(360deg);} }
+@keyframes spin {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
 
 .login-title {
-  font-size: 28px;
-  font-weight: 800;
-  margin: 6px 0 6px;
+  font-size: 26px;
+  font-weight: 700;
+  margin: 6px 0;
 }
 
 .login-subtitle {
   font-size: 14px;
   color: #6b7280;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .login-form {
   text-align: left;
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 .login-form input {
   width: 100%;
-  padding: 12px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
+  padding: 12px 14px;
+  border: 1.5px solid #9ca3af; /* darker border */
+  border-radius: 8px;
   font-size: 14px;
   outline: none;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  box-sizing: border-box; /* ✅ ensures equal widths */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.login-form input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
 }
 
 .btn-primary {
@@ -55,27 +69,31 @@
   color: white;
   border: none;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s;
 }
-.btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
-.btn-primary:hover:not(:disabled) { background: #2563eb; }
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.btn-primary:hover:not(:disabled) {
+  background: #2563eb;
+}
 
 .resend-link {
   display: inline-block;
   margin-top: 10px;
   color: #2563eb;
-  background: none;
-  border: none;
-  padding: 0;
   font-size: 13px;
   cursor: pointer;
 }
 
 .login-options {
   text-align: left;
-  margin: 12px 0 6px;
+  margin: 14px 0;
   font-size: 14px;
 }
 
@@ -99,4 +117,31 @@
   color: #16a34a;
   font-size: 14px;
   margin-bottom: 8px;
+}
+
+/* ✅ Google Button (kept consistent with signup.css) */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-google:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+.btn-google img {
+  width: 18px;
+  height: 18px;
 }

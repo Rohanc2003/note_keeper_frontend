@@ -52,7 +52,7 @@ export default function SignUp() {
     setMessage("");
     setError("");
     try {
-      const res = await axios.post("http://localhost:5000/auth/request-otp", {
+      await axios.post("http://localhost:5000/auth/request-otp", {
         name,
         email,
       });
@@ -113,6 +113,16 @@ export default function SignUp() {
           </button>
         </form>
       )}
+
+      {/* Google Signup */}
+      <button
+  type="button"
+  className="btn-google"
+  onClick={() => (window.location.href = "http://localhost:5000/auth/google")}
+>
+  Sign up with Google
+</button>
+
 
       {message && <p className="msg-success">{message}</p>}
       {error && <p className="msg-error">{error}</p>}
