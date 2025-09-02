@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // ✅ import navigate
+import { useNavigate } from "react-router-dom";
 import "../note.css";
 
 export default function NotesDashboard({ token, email, name, onSignOut }) {
@@ -8,12 +8,18 @@ export default function NotesDashboard({ token, email, name, onSignOut }) {
   const [newNote, setNewNote] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate(); // ✅ create navigate instance
+  const navigate = useNavigate();
+
+  // ✅ fallback from localStorage if props missing
+  const authToken = token || localStorage.getItem("token");
+  const displayName = name || localStorage.getItem("name") || "";
+  const displayEmail = email || localStorage.getItem("email") || "";
 
   const fetchNotes = async () => {
+    if (!authToken) return navigate("/login");
     try {
       const res = await axios.get("http://localhost:5000/notes", {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${authToken}` },
       });
       setNotes(Array.isArray(res.data.notes) ? res.data.notes : []);
     } catch (err) {
@@ -23,16 +29,20 @@ export default function NotesDashboard({ token, email, name, onSignOut }) {
     }
   };
 
-  useEffect(() => { fetchNotes(); }, []);
+  useEffect(() => {
+    fetchNotes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleAddNote = async () => {
     if (!newNote.trim()) return;
     try {
-      const res = await axios.post("http://localhost:5000/notes",
+      const res = await axios.post(
+        "http://localhost:5000/notes",
         { content: newNote },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${authToken}` } }
       );
-      setNotes(prev => [...prev, res.data.note]);
+      setNotes((prev) => [...prev, res.data.note]);
       setNewNote("");
     } catch (err) {
       console.error(err);
@@ -42,24 +52,22 @@ export default function NotesDashboard({ token, email, name, onSignOut }) {
   const handleDeleteNote = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/notes/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${authToken}` },
       });
-      setNotes(prev => prev.filter(n => n.id !== id));
+      setNotes((prev) => prev.filter((n) => n.id !== id));
     } catch (err) {
       console.error(err);
     }
   };
 
   const handleSignOut = () => {
-  // ✅ Clear localStorage session
-  localStorage.removeItem("token");
-  localStorage.removeItem("name");
-  localStorage.removeItem("email");
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    localStorage.removeItem("email");
 
-  if (onSignOut) onSignOut();   // clear token/state if parent passed it
-  navigate("/login");           // redirect to /login
-};
-
+    if (onSignOut) onSignOut();
+    navigate("/login");
+  };
 
   return (
     <div className="dashboard-container">
@@ -74,8 +82,10 @@ export default function NotesDashboard({ token, email, name, onSignOut }) {
 
       {/* Welcome Card */}
       <div className="welcome-card">
-        <h3>Welcome, <span className="highlight">{name}</span> !</h3>
-        <p>Email: {email}</p>
+        <h3>
+          Welcome, <span className="highlight">{displayName}</span> !
+        </h3>
+        <p>Email: {displayEmail}</p>
       </div>
 
       {/* Input + Create Note */}
@@ -101,10 +111,7 @@ export default function NotesDashboard({ token, email, name, onSignOut }) {
           notes.map((n) => (
             <div key={n.id} className="note-card">
               <span>{n.content}</span>
-              <button
-                className="delete-btn"
-                onClick={() => handleDeleteNote(n.id)}
-              >
+              <button className="delete-btn" onClick={() => handleDeleteNote(n.id)}>
                 🗑
               </button>
             </div>

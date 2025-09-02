@@ -1,97 +1,102 @@
 .login-container {
   max-width: 380px;
   margin: 0 auto;
-  padding: 25px;
-  font-family: Arial, sans-serif;
+  padding: 24px;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   text-align: center;
 }
 
 .login-header {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 10px;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .loading-spinner {
-  font-size: 20px;
+  font-size: 18px;
+  display: inline-block;
   animation: spin 1s linear infinite;
+  transform-origin: center;
 }
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { from {transform: rotate(0);} to {transform: rotate(360deg);} }
 
 .login-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 10px 0 5px;
+  font-size: 28px;
+  font-weight: 800;
+  margin: 6px 0 6px;
 }
 
 .login-subtitle {
   font-size: 14px;
-  color: #666;
-  margin-bottom: 20px;
+  color: #6b7280;
+  margin-bottom: 18px;
+}
+
+.login-form {
+  text-align: left;
+  margin-top: 4px;
 }
 
 .login-form input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-bottom: 12px;
+  padding: 12px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
   font-size: 14px;
+  outline: none;
+  margin-bottom: 12px;
 }
 
 .btn-primary {
   width: 100%;
-  background: #007bff;
-  color: #fff;
+  background: #3b82f6;
+  color: white;
   border: none;
   padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: 10px;
   font-size: 15px;
-  margin-top: 5px;
+  cursor: pointer;
 }
-
-.btn-primary:hover {
-  background: #0056b3;
-}
+.btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+.btn-primary:hover:not(:disabled) { background: #2563eb; }
 
 .resend-link {
-  color: #007bff;
-  cursor: pointer;
+  display: inline-block;
   margin-top: 10px;
+  color: #2563eb;
+  background: none;
+  border: none;
+  padding: 0;
   font-size: 13px;
+  cursor: pointer;
 }
 
 .login-options {
   text-align: left;
-  margin: 10px 0;
+  margin: 12px 0 6px;
   font-size: 14px;
 }
 
 .login-footer {
   font-size: 13px;
-  margin-top: 20px;
+  margin-top: 18px;
 }
 
 .login-footer a {
-  color: #007bff;
+  color: #2563eb;
   text-decoration: none;
 }
 
 .error-msg {
-  color: red;
+  color: #ef4444;
   font-size: 14px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .success-msg {
-  color: green;
+  color: #16a34a;
   font-size: 14px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
