@@ -50,6 +50,11 @@
   outline: none;
 }
 
+.loading-spinner {
+  font-size: 18px;
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
 .signup-form input:disabled {
   background: #f5f5f5;
   color: #666;

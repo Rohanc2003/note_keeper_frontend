@@ -12,24 +12,23 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get("token");
-  const name = urlParams.get("name");
-  const email = urlParams.get("email");
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    const name = urlParams.get("name");
+    const email = urlParams.get("email");
 
-  if (token) {
-    localStorage.setItem("token", token);
-    localStorage.setItem("name", name);
-    localStorage.setItem("email", email);
-    navigate("/dashboard");
-  } else {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
+    if (token) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("name", name);
+      localStorage.setItem("email", email);
       navigate("/dashboard");
+    } else {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        navigate("/dashboard");
+      }
     }
-  }
-}, [navigate]);
-
+  }, [navigate]);
 
   const handleRequestOtp = async (e) => {
     e.preventDefault();
@@ -68,6 +67,7 @@ function Login() {
   };
 
   return (
+  <div className="login-wrapper">
     <div className="login-container">
       <div className="login-header">
         <div className="loading-spinner">⏳</div>
@@ -107,11 +107,7 @@ function Login() {
           <p className="resend-link" onClick={handleRequestOtp}>Resend OTP</p>
         </form>
       )}
-      {/* <div className="login-image">
-      <img src="/pc.jpg" alt="Login visual" />
-    </div> */}
 
-      {/* Google login button */}
       <div className="google-login">
         <button className="btn-google" onClick={handleGoogleLogin}>
           Sign in with Google
@@ -121,9 +117,15 @@ function Login() {
       <p className="login-footer">
         Need an account? <a href="/signup">Create one</a>
       </p>
-      
     </div>
-  );
+
+    {/* ✅ Image section */}
+    <div className="login-image">
+      <img src="/pc.jpg" alt="Login visual" />
+    </div>
+  </div>
+);
+
 }
 
 export default Login;

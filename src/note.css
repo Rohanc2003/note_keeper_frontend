@@ -1,17 +1,27 @@
 /* Main Container */
 .dashboard-container {
-  max-width: 400px;
+  width: 90%;
+  max-width: 900px; /* bigger for PC */
   margin: 0 auto;
   font-family: Arial, sans-serif;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 /* Header */
 .dashboard-header {
   display: flex;
+  flex-direction: column; /* stack on mobile */
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 20px;
+}
+
+@media (min-width: 600px) {
+  .dashboard-header {
+    flex-direction: row; /* row for PC */
+    align-items: center;
+  }
 }
 
 .loading-spinner {
@@ -30,6 +40,13 @@
   color: #007bff;
   font-size: 14px;
   cursor: pointer;
+  margin-top: 10px;
+}
+
+@media (min-width: 600px) {
+  .signout-btn {
+    margin-top: 0;
+  }
 }
 
 /* Welcome Card */
@@ -56,23 +73,6 @@
   color: #555;
 }
 
-/* Create Note Button */
-/* .create-note-btn {
-  width: 100%;
-  background: #007bff;
-  color: #fff;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-bottom: 20px;
-} */
-
-.create-note-btn:hover {
-  background: #0056b3;
-}
-
 /* Notes Section */
 .notes-section h4 {
   margin-bottom: 10px;
@@ -87,6 +87,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap; /* wrap on smaller screens */
 }
 
 .delete-btn {
@@ -99,8 +100,15 @@
 /* Input + Create Note */
 .note-input-container {
   display: flex;
+  flex-direction: column; /* stack on mobile */
   gap: 10px;
   margin-bottom: 20px;
+}
+
+@media (min-width: 600px) {
+  .note-input-container {
+    flex-direction: row; /* row on PC */
+  }
 }
 
 .note-input {
@@ -123,4 +131,12 @@
 
 .create-note-btn:hover {
   background: #0056b3;
+}
+
+/* Optional: responsive font-size for PC */
+@media (min-width: 900px) {
+  .note-input, .create-note-btn {
+    font-size: 16px;
+    padding: 12px 20px;
+  }
 }

@@ -19,7 +19,7 @@ export default function SignUp() {
     setError("");
     try {
       const res = await axios.post("http://localhost:5000/auth/request-otp", {
-        name,
+        name,   // send both, since backend expects
         email,
       });
       setMessage(res.data.message);
@@ -29,13 +29,14 @@ export default function SignUp() {
     }
   };
 
-  // Verify OTP
+  // Verify OTP + Create User
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
     try {
       const res = await axios.post("http://localhost:5000/auth/verify-otp", {
+        name,
         email,
         otp,
       });
@@ -70,6 +71,8 @@ export default function SignUp() {
     <div className="signup-wrapper">
       {/* Form container */}
       <div className="signup-container">
+        <div><div className="loading-spinner">⏳ </div><h2>HD</h2></div>
+        
         <h2 className="signup-title">Sign up</h2>
         <p className="signup-subtitle">Sign up to enjoy the feature of HD</p>
 
@@ -106,13 +109,9 @@ export default function SignUp() {
               required
             />
             <button type="submit" className="btn-primary">Sign up</button>
-            <button
-              type="button"
-              onClick={handleResendOTP}
-              className="btn-secondary"
-            >
+            <p className="resend-link" onClick={handleResendOTP}>
               Resend OTP
-            </button>
+            </p>
           </form>
         )}
 
