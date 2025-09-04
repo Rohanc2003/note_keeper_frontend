@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../login.css";
+import { Link } from "react-router-dom";
 
 const BACKEND_URL = "https://note-keeper-backend-gaz2.onrender.com";
 function Login() {
@@ -116,7 +117,7 @@ function Login() {
       </div>
 
       <p className="login-footer">
-        Need an account? <a href="/signup">Create one</a>
+        Need an account? <Link to="/signup">Create one</Link>
       </p>
     </div>
 
