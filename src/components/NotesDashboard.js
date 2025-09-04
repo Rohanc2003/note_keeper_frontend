@@ -1,74 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../note.css";
 
 const BACKEND_URL = "https://note-keeper-backend-gaz2.onrender.com";
 
-export default function NotesDashboard({ token: propToken, email: propEmail, name: propName, onSignOut }) {
+export default function NotesDashboard({ onSignOut }) {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [authToken, setAuthToken] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [displayEmail, setDisplayEmail] = useState("");
 
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const decodeJwt = (token) => {
-    try {
-      const payloadB64 = token.split(".")[1];
-      const base64 = payloadB64.replace(/-/g, "+").replace(/_/g, "/");
-      const json = decodeURIComponent(
-        atob(base64)
-          .split("")
-          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-          .join("")
-      );
-      return JSON.parse(json);
-    } catch {
-      return null;
-    }
-  };
+  // ✅ Always read from localStorage
+  const authToken = localStorage.getItem("token");
+  const displayName = localStorage.getItem("name") || "";
+  const displayEmail = localStorage.getItem("email") || "";
 
   useEffect(() => {
-  const params = new URLSearchParams(location.search);
-  const urlToken = params.get("token");
-  const urlName = params.get("name");
-  const urlEmail = params.get("email");
-
-  if (urlToken) {
-    setAuthToken(urlToken);
-    setDisplayName(urlName || "");
-    setDisplayEmail(urlEmail || "");
-
-    localStorage.setItem("token", urlToken);
-    if (urlName) localStorage.setItem("name", urlName);
-    if (urlEmail) localStorage.setItem("email", urlEmail);
-
-    // ✅ Clean the URL so React Router sees /dashboard only
-    navigate("/dashboard", { replace: true });
-  } else {
-    const t = propToken || localStorage.getItem("token");
-    const n = propName || localStorage.getItem("name");
-    const e = propEmail || localStorage.getItem("email");
-
-    if (!t) {
+    if (!authToken) {
       navigate("/login");
       return;
     }
-    setAuthToken(t);
-    setDisplayName(n || "");
-    setDisplayEmail(e || "");
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
-
-  useEffect(() => {
-    if (!authToken) return;
     fetchNotes(authToken);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
 
   const fetchNotes = async (token) => {
@@ -130,11 +86,15 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
       <div className="dashboard-header">
         <div className="loading-spinner">⏳</div>
         <h2>Dashboard</h2>
-        <button className="signout-btn" onClick={doSignOut}>Sign Out</button>
+        <button className="signout-btn" onClick={doSignOut}>
+          Sign Out
+        </button>
       </div>
 
       <div className="welcome-card">
-        <h3>Welcome, <span className="highlight">{displayName || "user"}</span>!</h3>
+        <h3>
+          Welcome, <span className="highlight">{displayName || "user"}</span>!
+        </h3>
         <p>Email: {displayEmail || "unknown"}</p>
       </div>
 
@@ -146,20 +106,29 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
           placeholder="Enter your note"
           className="note-input"
         />
-        <button className="create-note-btn" onClick={handleAddNote}>Create Note</button>
+        <button className="create-note-btn" onClick={handleAddNote}>
+          Create Note
+        </button>
       </div>
 
       <div className="notes-section">
         <h4>Notes</h4>
-        {loading ? <p>Loading...</p> : error ? <p style={{ color: "red" }}>{error}</p> :
-          notes.length === 0 ? <p>No notes yet.</p> :
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p style={{ color: "red" }}>{error}</p>
+        ) : notes.length === 0 ? (
+          <p>No notes yet.</p>
+        ) : (
           notes.map((n) => (
             <div key={n.id} className="note-card">
               <span>{n.content}</span>
-              <button className="delete-btn" onClick={() => handleDeleteNote(n.id)}>🗑</button>
+              <button className="delete-btn" onClick={() => handleDeleteNote(n.id)}>
+                🗑
+              </button>
             </div>
           ))
-        }
+        )}
       </div>
     </div>
   );
