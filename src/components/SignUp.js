@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import NotesDashboard from "../components/NotesDashboard.js";
 import "../SignUp.css";
+import { Link } from "react-router-dom";
 
 const BACKEND_URL = "https://note-keeper-backend-gaz2.onrender.com";
 export default function SignUp() {
@@ -129,8 +130,8 @@ export default function SignUp() {
         {error && <p className="msg-error">{error}</p>}
 
         <p className="signup-footer">
-          Already have an account? <a href="/login">Sign in</a>
-        </p>
+  Already have an account? <Link to="/login">Sign in</Link>
+</p>
       </div>
 
       {/* Desktop image (hidden on mobile, shown on PC) */}
