@@ -10,15 +10,13 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
   const [newNote, setNewNote] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [authToken, setAuthToken] = useState(propToken || "");
-  const [userId, setUserId] = useState(null);
-  const [displayName, setDisplayName] = useState(propName || "");
-  const [displayEmail, setDisplayEmail] = useState(propEmail || "");
+  const [authToken, setAuthToken] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [displayEmail, setDisplayEmail] = useState("");
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Decode JWT payload without verifying
   const decodeJwt = (token) => {
     try {
       const payloadB64 = token.split(".")[1];
@@ -35,54 +33,40 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
     }
   };
 
-  // 1️⃣ On mount: check URL params for Google OAuth token
   useEffect(() => {
+    // 1️⃣ Check URL params
     const params = new URLSearchParams(location.search);
     const urlToken = params.get("token");
     const urlName = params.get("name");
     const urlEmail = params.get("email");
 
     if (urlToken) {
-      // Save in state and localStorage
       setAuthToken(urlToken);
-      if (urlName) setDisplayName(urlName);
-      if (urlEmail) setDisplayEmail(urlEmail);
-
+      setDisplayName(urlName || "");
+      setDisplayEmail(urlEmail || "");
       localStorage.setItem("token", urlToken);
       if (urlName) localStorage.setItem("name", urlName);
       if (urlEmail) localStorage.setItem("email", urlEmail);
+    } else {
+      // fallback
+      const t = propToken || localStorage.getItem("token");
+      const n = propName || localStorage.getItem("name");
+      const e = propEmail || localStorage.getItem("email");
 
-      // Clean URL
-      navigate("/dashboard", { replace: true });
-      return;
-    }
-
-    // Fallback: use prop or localStorage
-    const t = propToken || localStorage.getItem("token");
-    const n = propName || localStorage.getItem("name");
-    const e = propEmail || localStorage.getItem("email");
-
-    if (t) setAuthToken(t);
-    if (n) setDisplayName(n);
-    if (e) setDisplayEmail(e);
-
-    if (!t) {
-      navigate("/login");
+      if (!t) {
+        navigate("/login");
+        return;
+      }
+      setAuthToken(t);
+      setDisplayName(n || "");
+      setDisplayEmail(e || "");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search]);
+  }, []);
 
-  // 2️⃣ Fetch notes whenever token is available
   useEffect(() => {
     if (!authToken) return;
-
-    const decoded = decodeJwt(authToken);
-    if (decoded?.id) setUserId(decoded.id);
-    if (!displayName && decoded?.name) setDisplayName(decoded.name);
-    if (!displayEmail && decoded?.email) setDisplayEmail(decoded.email);
-
     fetchNotes(authToken);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
 
   const fetchNotes = async (token) => {
@@ -94,7 +78,6 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
       });
       setNotes(Array.isArray(res.data.notes) ? res.data.notes : []);
     } catch (err) {
-      console.error(err);
       setError(err.response?.data?.error || "Failed to fetch notes");
       if (err.response?.status === 401 || err.response?.status === 403) doSignOut();
     } finally {
@@ -114,7 +97,6 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
       setNotes((prev) => [res.data.note, ...prev]);
       setNewNote("");
     } catch (err) {
-      console.error(err);
       setError(err.response?.data?.error || "Failed to add note");
       if (err.response?.status === 401 || err.response?.status === 403) doSignOut();
     }
@@ -128,7 +110,6 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
       });
       setNotes((prev) => prev.filter((n) => n.id !== id));
     } catch (err) {
-      console.error(err);
       setError(err.response?.data?.error || "Failed to delete note");
       if (err.response?.status === 401 || err.response?.status === 403) doSignOut();
     }
@@ -168,20 +149,15 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
 
       <div className="notes-section">
         <h4>Notes</h4>
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p style={{ color: "red" }}>{error}</p>
-        ) : notes.length === 0 ? (
-          <p>No notes yet.</p>
-        ) : (
+        {loading ? <p>Loading...</p> : error ? <p style={{ color: "red" }}>{error}</p> :
+          notes.length === 0 ? <p>No notes yet.</p> :
           notes.map((n) => (
             <div key={n.id} className="note-card">
               <span>{n.content}</span>
               <button className="delete-btn" onClick={() => handleDeleteNote(n.id)}>🗑</button>
             </div>
           ))
-        )}
+        }
       </div>
     </div>
   );
