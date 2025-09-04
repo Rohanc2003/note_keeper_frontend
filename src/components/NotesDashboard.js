@@ -34,35 +34,37 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
   };
 
   useEffect(() => {
-    // 1️⃣ Check URL params
-    const params = new URLSearchParams(location.search);
-    const urlToken = params.get("token");
-    const urlName = params.get("name");
-    const urlEmail = params.get("email");
+  const params = new URLSearchParams(location.search);
+  const urlToken = params.get("token");
+  const urlName = params.get("name");
+  const urlEmail = params.get("email");
 
-    if (urlToken) {
-      setAuthToken(urlToken);
-      setDisplayName(urlName || "");
-      setDisplayEmail(urlEmail || "");
-      localStorage.setItem("token", urlToken);
-      if (urlName) localStorage.setItem("name", urlName);
-      if (urlEmail) localStorage.setItem("email", urlEmail);
-    } else {
-      // fallback
-      const t = propToken || localStorage.getItem("token");
-      const n = propName || localStorage.getItem("name");
-      const e = propEmail || localStorage.getItem("email");
+  if (urlToken) {
+    setAuthToken(urlToken);
+    setDisplayName(urlName || "");
+    setDisplayEmail(urlEmail || "");
 
-      if (!t) {
-        navigate("/login");
-        return;
-      }
-      setAuthToken(t);
-      setDisplayName(n || "");
-      setDisplayEmail(e || "");
+    localStorage.setItem("token", urlToken);
+    if (urlName) localStorage.setItem("name", urlName);
+    if (urlEmail) localStorage.setItem("email", urlEmail);
+
+    // ✅ Clean the URL so React Router sees /dashboard only
+    navigate("/dashboard", { replace: true });
+  } else {
+    const t = propToken || localStorage.getItem("token");
+    const n = propName || localStorage.getItem("name");
+    const e = propEmail || localStorage.getItem("email");
+
+    if (!t) {
+      navigate("/login");
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setAuthToken(t);
+    setDisplayName(n || "");
+    setDisplayEmail(e || "");
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
   useEffect(() => {
     if (!authToken) return;
