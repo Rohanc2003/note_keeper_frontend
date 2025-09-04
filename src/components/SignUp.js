@@ -3,6 +3,7 @@ import axios from "axios";
 import NotesDashboard from "../components/NotesDashboard.js";
 import "../SignUp.css";
 
+const BACKEND_URL = "https://note-keeper-backend-gaz2.onrender.com";
 export default function SignUp() {
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
@@ -18,7 +19,7 @@ export default function SignUp() {
     setMessage("");
     setError("");
     try {
-      const res = await axios.post("http://localhost:5000/auth/request-otp", {
+      const res = await axios.post(`${BACKEND_URL}/auth/request-otp`, {
         name,   // send both, since backend expects
         email,
       });
@@ -35,7 +36,7 @@ export default function SignUp() {
     setMessage("");
     setError("");
     try {
-      const res = await axios.post("http://localhost:5000/auth/verify-otp", {
+      const res = await axios.post(`${BACKEND_URL}/auth/verify-otp`, {
         name,
         email,
         otp,
@@ -53,7 +54,7 @@ export default function SignUp() {
     setMessage("");
     setError("");
     try {
-      await axios.post("http://localhost:5000/auth/request-otp", {
+      await axios.post(`${BACKEND_URL}/auth/request-otp`, {
         name,
         email,
       });
@@ -119,7 +120,7 @@ export default function SignUp() {
         <button
           type="button"
           className="btn-google"
-          onClick={() => (window.location.href = "http://localhost:5000/auth/google")}
+          onClick={() => (window.location.href =`${BACKEND_URL}/auth/google`)}
         >
           Sign up with Google
         </button>

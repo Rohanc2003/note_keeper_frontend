@@ -1,3 +1,23 @@
+steps to run the project 
+create .evn(running locally) 
+like thise
+PORT=5000
+DATABASE_URL=
+JWT_SECRET=yourjwtsecret
+GOOGLE_CLIENT_ID=xxxx
+GOOGLE_CLIENT_SECRET=xxxx
+EMAIL_USER=
+EMAIL_PASS=   # <-- Your 16-char Gmail App Password (no spaces)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=
+
+add all your details 
+see the db code i have provided file create db
+run npm init
+npm install
+to run backend use:- node server.js
+to run react follow above commands and finally use:- npm start
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

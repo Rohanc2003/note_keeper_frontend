@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const BACKEND_URL = "https://note-keeper-backend-gaz2.onrender.com";
 export default function OTPVerify({ email, setStep, setToken, setMessage, setError }) {
   const [otp, setOtp] = useState("");
 
@@ -8,7 +9,7 @@ export default function OTPVerify({ email, setStep, setToken, setMessage, setErr
     e.preventDefault();
     setMessage(""); setError("");
     try {
-      const res = await axios.post("http://localhost:5000/auth/verify-otp", { email, otp });
+      const res = await axios.post(`${BACKEND_URL}/auth/verify-otp`, { email, otp });
       setToken(res.data.token);
       setMessage(res.data.message);
       setStep(3);

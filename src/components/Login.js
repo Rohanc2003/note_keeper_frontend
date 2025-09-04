@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../login.css";
 
+const BACKEND_URL = "https://note-keeper-backend-gaz2.onrender.com";
 function Login() {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -35,7 +36,7 @@ function Login() {
     setError("");
     setMessage("");
     try {
-      const res = await axios.post("http://localhost:5000/auth/login-check", { email });
+      const res = await axios.post(`${BACKEND_URL}/auth/login-check`, { email });
       if (res.status === 200) {
         setOtpRequested(true);
         setMessage("OTP sent to your email!");
@@ -50,7 +51,7 @@ function Login() {
     setError("");
     setMessage("");
     try {
-      const response = await axios.post("http://localhost:5000/auth/verify-otp", { email, otp });
+      const response = await axios.post(`${BACKEND_URL}/auth/verify-otp`, { email, otp });
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("name", response.data.user.name);
@@ -63,7 +64,7 @@ function Login() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/google";
+    window.location.href = `${BACKEND_URL}/auth/google`;
   };
 
   return (

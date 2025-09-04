@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../note.css";
+const BACKEND_URL = "https://note-keeper-backend-gaz2.onrender.com";
 
 export default function NotesDashboard({ token: propToken, email: propEmail, name: propName, onSignOut }) {
   const [notes, setNotes] = useState([]);
@@ -101,7 +102,7 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
     setLoading(true);
     setError("");
     try {
-      const res = await axios.get("http://localhost:5000/notes", {
+      const res = await axios.get(`${BACKEND_URL}/notes`, {
         headers: { Authorization: `Bearer ${t}` },
       });
 
@@ -127,7 +128,7 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
     setError("");
     try {
       const res = await axios.post(
-        "http://localhost:5000/notes",
+        `${BACKEND_URL}/notes`,
         { content: newNote },
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
@@ -145,7 +146,7 @@ export default function NotesDashboard({ token: propToken, email: propEmail, nam
   const handleDeleteNote = async (id) => {
     setError("");
     try {
-      await axios.delete(`http://localhost:5000/notes/${id}`, {
+      await axios.delete(`${BACKEND_URL}/notes/${id}`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
       setNotes((prev) => prev.filter((n) => n.id !== id));

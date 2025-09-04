@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const BACKEND_URL = "https://note-keeper-backend-gaz2.onrender.com";
 export default function OTPRequest({ setStep, setEmail, setName, setMessage, setError }) {
   const [localName, setLocalName] = useState("");
   const [localEmail, setLocalEmail] = useState("");
@@ -9,7 +10,7 @@ export default function OTPRequest({ setStep, setEmail, setName, setMessage, set
     e.preventDefault();
     setMessage(""); setError("");
     try {
-      const res = await axios.post("http://localhost:5000/auth/request-otp", {
+      const res = await axios.post(`${BACKEND_URL}/auth/request-otp`, {
         name: localName,
         email: localEmail,
       });
