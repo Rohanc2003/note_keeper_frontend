@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../login.css";
-import { Link } from "react-router-dom";
 
 const BACKEND_URL = "https://note-keeper-backend-gaz2.onrender.com";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -13,6 +13,7 @@ function Login() {
   const [otpRequested, setOtpRequested] = useState(false);
   const navigate = useNavigate();
 
+  // 🔑 Handle Google redirect or auto-login if already logged in
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
@@ -20,9 +21,11 @@ function Login() {
     const email = urlParams.get("email");
 
     if (token) {
+      // Save token + user
       localStorage.setItem("token", token);
-      localStorage.setItem("name", name);
-      localStorage.setItem("email", email);
+      localStorage.setItem("user", JSON.stringify({ name, email }));
+
+      // Redirect to dashboard
       navigate("/dashboard");
     } else {
       const storedToken = localStorage.getItem("token");
@@ -32,6 +35,7 @@ function Login() {
     }
   }, [navigate]);
 
+  // 📩 Request OTP
   const handleRequestOtp = async (e) => {
     e.preventDefault();
     setError("");
@@ -47,16 +51,26 @@ function Login() {
     }
   };
 
+  // ✅ Verify OTP
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
     try {
-      const response = await axios.post(`${BACKEND_URL}/auth/verify-otp`, { email, otp });
+      const response = await axios.post(`${BACKEND_URL}/auth/verify-otp`, {
+        email,
+        otp,
+      });
+
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("name", response.data.user.name);
-        localStorage.setItem("email", response.data.user.email);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            name: response.data.user.name,
+            email: response.data.user.email,
+          })
+        );
         navigate("/dashboard");
       }
     } catch (err) {
@@ -64,70 +78,78 @@ function Login() {
     }
   };
 
+  // 🌐 Google Login
   const handleGoogleLogin = () => {
     window.location.href = `${BACKEND_URL}/auth/google`;
   };
 
   return (
-  <div className="login-wrapper">
-    <div className="login-container">
-      <div className="login-header">
-        <div className="loading-spinner">⏳</div>
-        <h2>HD</h2>
+    <div className="login-wrapper">
+      <div className="login-container">
+        <div className="login-header">
+          <div className="loading-spinner">⏳</div>
+          <h2>HD</h2>
+        </div>
+
+        <h3 className="login-title">Sign In</h3>
+        <p className="login-subtitle">
+          Please login to continue to your account.
+        </p>
+
+        {error && <p className="error-msg">{error}</p>}
+        {message && <p className="success-msg">{message}</p>}
+
+        {!otpRequested && (
+          <form onSubmit={handleRequestOtp} className="login-form">
+            <input
+              type="email"
+              placeholder="Enter your Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn-primary">
+              Request OTP
+            </button>
+          </form>
+        )}
+
+        {otpRequested && (
+          <form onSubmit={handleVerifyOtp} className="login-form">
+            <input type="email" value={email} disabled />
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn-primary">
+              Verify & Login
+            </button>
+            <p className="resend-link" onClick={handleRequestOtp}>
+              Resend OTP
+            </p>
+          </form>
+        )}
+
+        <div className="google-login">
+          <button className="btn-google" onClick={handleGoogleLogin}>
+            Sign in with Google
+          </button>
+        </div>
+
+        <p className="login-footer">
+          Need an account? <Link to="/signup">Create one</Link>
+        </p>
       </div>
 
-      <h3 className="login-title">Sign In</h3>
-      <p className="login-subtitle">Please login to continue to your account.</p>
-
-      {error && <p className="error-msg">{error}</p>}
-      {message && <p className="success-msg">{message}</p>}
-
-      {!otpRequested && (
-        <form onSubmit={handleRequestOtp} className="login-form">
-          <input
-            type="email"
-            placeholder="Enter your Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <button type="submit" className="btn-primary">Request OTP</button>
-        </form>
-      )}
-
-      {otpRequested && (
-        <form onSubmit={handleVerifyOtp} className="login-form">
-          <input type="email" value={email} disabled />
-          <input
-            type="text"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            required
-          />
-          <button type="submit" className="btn-primary">Verify & Login</button>
-          <p className="resend-link" onClick={handleRequestOtp}>Resend OTP</p>
-        </form>
-      )}
-
-      <div className="google-login">
-        <button className="btn-google" onClick={handleGoogleLogin}>
-          Sign in with Google
-        </button>
+      {/* ✅ Image section */}
+      <div className="login-image">
+        <img src="/pc.jpg" alt="Login visual" />
       </div>
-
-      <p className="login-footer">
-        Need an account? <Link to="/signup">Create one</Link>
-      </p>
     </div>
-
-    {/* ✅ Image section */}
-    <div className="login-image">
-      <img src="/pc.jpg" alt="Login visual" />
-    </div>
-  </div>
-);
-
+  );
 }
 
 export default Login;
