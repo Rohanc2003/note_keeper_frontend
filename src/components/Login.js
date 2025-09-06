@@ -80,7 +80,7 @@ function Login() {
 
   // 🌐 Google Login
   const handleGoogleLogin = () => {
-    window.location.href = `${BACKEND_URL}/auth/google`;
+    window.location.href = "https://noteswebapp-47lt.onrender.com/auth/google";
   };
 
   return (
