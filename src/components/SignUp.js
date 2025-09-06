@@ -121,7 +121,7 @@ export default function SignUp() {
         <button
           type="button"
           className="btn-google"
-          onClick={() => (window.location.href =`${BACKEND_URL}/auth/google`)}
+          onClick={() => (window.location.href ="https://note-keeper-backend-gaz2.onrender.com")}
         >
           Sign up with Google
         </button>
